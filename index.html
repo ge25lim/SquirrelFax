@@ -4,20 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Squirrel Article</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+
+        .squirrel {
+            width: 150px; /* Adjust size if needed */
+            animation: tilt 0.6s infinite alternate ease-in-out;
+        }
+
+        @keyframes tilt {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+    </style>
     <script>
         async function redirectToRandomSquirrelArticle() {
             try {
-                // Wikipedia API search for pages with "squirrel"
                 let response = await fetch("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=squirrel&format=json&origin=*");
                 let data = await response.json();
 
                 if (data.query.search.length > 0) {
-                    // Pick a random result
                     let randomIndex = Math.floor(Math.random() * data.query.search.length);
                     let title = data.query.search[randomIndex].title;
                     let url = `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
 
-                    // Redirect to the Wikipedia article
                     window.location.href = url;
                 } else {
                     document.body.innerHTML = "<h2>No squirrel articles found!</h2>";
@@ -32,6 +56,8 @@
     </script>
 </head>
 <body>
-    <h1>Redirecting to a random squirrel article...</h1>
+    <img src="squirrel.png" alt="Squirrel" class="squirrel">
+    <h1>Finding a random squirrel article...</h1>
 </body>
 </html>
+
