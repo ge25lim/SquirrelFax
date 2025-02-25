@@ -5,19 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Squirrel Article</title>
     <script>
+        async function fetchArticles(searchTerm) {
+            let url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
+            let response = await fetch(url);
+            let data = await response.json();
+            return data.query.search.map(article => article.title);
+        }
+
         async function redirectToRandomSquirrelArticle() {
             try {
-                // Wikipedia API search for pages with "squirrel"
-                let response = await fetch("https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=squirrel&format=json&origin=*");
-                let data = await response.json();
+                // Fetch articles for both "squirrel" and "Eichhörnchen"
+                let [englishResults, germanResults] = await Promise.all([
+                    fetchArticles("squirrel"),
+                    fetchArticles("Eichhörnchen")
+                ]);
 
-                if (data.query.search.length > 0) {
-                    // Pick a random result
-                    let randomIndex = Math.floor(Math.random() * data.query.search.length);
-                    let title = data.query.search[randomIndex].title;
-                    let url = `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+                // Combine and remove duplicates
+                let allResults = [...new Set([...englishResults, ...germanResults])];
 
-                    // Redirect to the Wikipedia article
+                if (allResults.length > 0) {
+                    // Pick a random article
+                    let randomTitle = allResults[Math.floor(Math.random() * allResults.length)];
+                    let url = `https://en.wikipedia.org/wiki/${encodeURIComponent(randomTitle)}`;
+
+                    // Redirect
                     window.location.href = url;
                 } else {
                     document.body.innerHTML = "<h2>No squirrel articles found!</h2>";
@@ -35,6 +46,7 @@
     <h1>Redirecting to a random squirrel article...</h1>
 </body>
 </html>
+
 
 
 
