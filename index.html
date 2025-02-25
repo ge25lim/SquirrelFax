@@ -12,12 +12,19 @@
             return data.query.search.map(article => article.title);
         }
 
+        async function fetchGermanArticles(searchTerm) {
+            let url = `https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
+            let response = await fetch(url);
+            let data = await response.json();
+            return data.query.search.map(article => article.title);
+        }
+
         async function redirectToRandomSquirrelArticle() {
             try {
                 // Fetch articles for both "squirrel" and "Eichhörnchen"
                 let [englishResults, germanResults] = await Promise.all([
                     fetchArticles("squirrel"),
-                    fetchArticles("Eichhörnchen")
+                    fetchGermanArticles("Eichhörnchen")
                 ]);
 
                 // Combine and remove duplicates
