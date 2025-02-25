@@ -9,14 +9,14 @@
             let url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
             let response = await fetch(url);
             let data = await response.json();
-            return data.query.search.map(article => article.title);
+            return data.query.search.map(article => `https://en.wikipedia.org/wiki/${article.title}`);
         }
 
         async function fetchGermanArticles(searchTerm) {
             let url = `https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
             let response = await fetch(url);
             let data = await response.json();
-            return data.query.search.map(article => article.title);
+            return data.query.search.map(article => `https://de.wikipedia.org/wiki/${article.title}`);
         }
 
         async function redirectToRandomSquirrelArticle() {
@@ -32,8 +32,8 @@
 
                 if (allResults.length > 0) {
                     // Pick a random article
-                    let randomTitle = allResults[Math.floor(Math.random() * allResults.length)];
-                    let url = `https://en.wikipedia.org/wiki/${encodeURIComponent(randomTitle)}`;
+                    let url = allResults[Math.floor(Math.random() * allResults.length)];
+                    //let url = `https://en.wikipedia.org/wiki/${encodeURIComponent(randomTitle)}`;
 
                     // Redirect
                     window.location.href = url;
