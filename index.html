@@ -17,14 +17,14 @@
     </style>
     <script>
         async function fetchArticles(searchTerm) {
-            let url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
+            let url = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&srlimit=100&format=json&origin=*`;
             let response = await fetch(url);
             let data = await response.json();
             return data.query.search.map(article => `https://en.wikipedia.org/wiki/${article.title}`);
         }
 
         async function fetchGermanArticles(searchTerm) {
-            let url = `https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
+            let url = `https://de.wikipedia.org/w/api.php?action=query&list=search&srsearch=intitle:${encodeURIComponent(searchTerm)}&format=json&origin=*`;
             let response = await fetch(url);
             let data = await response.json();
             return data.query.search.map(article => `https://de.wikipedia.org/wiki/${article.title}`);
@@ -40,14 +40,15 @@
         async function redirectToRandomSquirrelArticle() {
             try {
                 // Fetch articles for both "squirrel" and "Eichhörnchen"
-                let [englishResults, germanResults, bavarianResults] = await Promise.all([
+                let [englishResults, germanResults, germanResults2, bavarianResults] = await Promise.all([
                     fetchArticles("squirrel"),
                     fetchGermanArticles("Eichhörnchen"),
+                    fetchGermanArticles("hörnchen"),
                     fetchBavarianArticles("Oachkatzl")
                 ]);
 
                 // Combine and remove duplicates
-                let allResults = [...new Set([...englishResults, ...germanResults, ...bavarianResults])];
+                let allResults = [...new Set([...englishResults, ...germanResults, ...germanResults2, ...bavarianResults])];
 
                 if (allResults.length > 0) {
                     // Pick a random article
