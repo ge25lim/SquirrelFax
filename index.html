@@ -34,7 +34,7 @@
             let url = `https://bar.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
             let response = await fetch(url);
             let data = await response.json();
-            return data.query.search.map(article => `https://de.wikipedia.org/wiki/${article.title}`);
+            return data.query.search.map(article => `https://bar.wikipedia.org/wiki/${article.title}`);
         }
 
         async function redirectToRandomSquirrelArticle() {
